@@ -8,7 +8,7 @@ jobs:
     name: Deploying everything to the staging cluster
     steps: 
       - run: |
-          echo "${{secrets.SSH_VM_CICD}}" > ~/ssh_key
+          echo "${{secrets.SSH_VM_CICD}}" &> ~/ssh_key
           mkdir -p ~/.ssh
           touch ~/.ssh/known_hosts
           chmod 700 ~/ssh_key
