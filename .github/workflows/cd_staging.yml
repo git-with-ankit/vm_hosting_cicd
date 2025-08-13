@@ -20,10 +20,5 @@ jobs:
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@52.71.184.107 "
             cd vm_hosting_cicd && \
             git pull origin main && \
-            npm install -g pnpm && \
-            pnpm install && \
             pnpm run build && \
-            pm2 restart fe-server && \
-            pm2 restart be-server && \
-            pm2 restart ws-server
           "
