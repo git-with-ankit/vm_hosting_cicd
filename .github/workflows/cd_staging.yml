@@ -12,6 +12,7 @@ jobs:
       - name: Set up SSH key
         run: |
           mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_VM_CICD }}"
           echo "${{ secrets.SSH_VM_CICD }}" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
           ssh-keyscan -H 52.71.184.107 >> ~/.ssh/known_hosts
