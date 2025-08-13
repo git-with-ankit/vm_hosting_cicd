@@ -7,7 +7,6 @@ on:
 jobs:
   redeploy:
     runs-on: ubuntu-latest
-    name: Deploying everything to the staging cluster
     steps:
       - name: Set up SSH key
         run: |
@@ -15,11 +14,10 @@ jobs:
           echo "${{ secrets.SSH_VM_CICD }}" | tr -d '\r' > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H 52.71.184.107 >> ~/.ssh/known_hosts
-    
 
-      - name: Deploy to Staging
+      - name: Deploy to staging
         run: |
-          ssh -i ~/.ssh/id_rsa root@52.71.184.107"
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa root@52.71.184.107 "
             cd vm_hosting_cicd && \
             git pull origin main && \
             npm install -g pnpm && \
