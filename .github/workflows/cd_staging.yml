@@ -19,7 +19,7 @@ jobs:
 
       - name: Deploy to Staging
         run: |
-          ssh -i ~/.ssh/id_rsa root@52.71.184.107 -t"
+          ssh -i ~/.ssh/id_rsa root@52.71.184.107"
             cd vm_hosting_cicd && \
             git pull origin main && \
             npm install -g pnpm && \
