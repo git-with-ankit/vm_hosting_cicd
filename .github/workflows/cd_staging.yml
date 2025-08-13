@@ -18,7 +18,7 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@52.71.184.107 "
             cd vm_hosting_cicd && \
-            export PATH=/root/.nvm/versions/node/v22.13.1/bin:\$PATH && \
+            export PATH=export PATH=/root/.nvm/versions/node/v22.13.1/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin && \
             npm install -g pnpm && \
             pnpm install && \
             pnpm run build && \
