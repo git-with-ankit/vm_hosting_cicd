@@ -20,6 +20,7 @@ jobs:
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@52.71.184.107 "
             cd vm_hosting_cicd && \
             git pull origin main && \
+            export PATH=/home/user/bin:/home/user/.local/bin:/usr/local/sbin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
             npm install -g pnpm && \
             pnpm install && \
             pnpm run build && \
