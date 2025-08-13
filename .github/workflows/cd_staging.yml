@@ -1,15 +1,30 @@
 name: Deploy to Staging Server
+
 on:
   push:
     branches: [main]
+
 jobs:
   redeploy:
     runs-on: ubuntu-latest
     name: Deploying everything to the staging cluster
-    steps: 
-      - run: |
-          echo "${{secrets.SSH_VM_CICD}}" &> ~/ssh_key
+    steps:
+      - name: Set up SSH key
+        run: |
           mkdir -p ~/.ssh
-          touch ~/.ssh/known_hosts
-          chmod 700 ~/ssh_key
-          ssh -i ~/ssh_key root@52.71.184.107 -t "cd vm_hosting_cicd && git pull origin main && npm install -g pnpm && pnpm install && pnpm run build && pm2 restart fe-server && pm2 restart be-server && pm2 restart ws-server"
+          echo "${{ secrets.SSH_VM_CICD }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -H 52.71.184.107 >> ~/.ssh/known_hosts
+
+      - name: Deploy to Staging
+        run: |
+          ssh -i ~/.ssh/id_ed25519 root@52.71.184.107 -t "
+            cd vm_hosting_cicd && \
+            git pull origin main && \
+            npm install -g pnpm && \
+            pnpm install && \
+            pnpm run build && \
+            pm2 restart fe-server && \
+            pm2 restart be-server && \
+            pm2 restart ws-server
+          "
