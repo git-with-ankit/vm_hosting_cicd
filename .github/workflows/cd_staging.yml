@@ -6,14 +6,23 @@ on:
 jobs:
   redeploy_everything:
     runs-on: ubuntu-latest
-    name: Deploying everything to the staging cluster
     steps:
+      - name: Decode and write SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY_B64 }}" | base64 -d > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H 52.71.184.107 >> ~/.ssh/known_hosts
+
       - name: Deploy to staging server
         run: |
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/ssh_key
-          mkdir -p ~/.ssh
-          ls ~/.ssh
-          touch ~/.ssh/known_hosts
-          ssh-keyscan -H 52.71.184.107 >> ~/.ssh/known_hosts
-          chmod 700 ~/ssh_key
-          ssh -i ~/ssh_key ubuntu@52.71.184.107 -t "cd vm_hosting_cicd && git pull origin main && export PATH=/root/.nvm/versions/node/v22.13.1/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin && npm install -g pnpm && pnpm install && pnpm run build && pm2 restart fe-server && pm2 restart http-server && pm2 restart ws-server"
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@52.71.184.107 "
+            cd vm_hosting_cicd && \
+            export PATH=/root/.nvm/versions/node/v22.13.1/bin:\$PATH && \
+            npm install -g pnpm && \
+            pnpm install && \
+            pnpm run build && \
+            pm2 restart fe-server && \
+            pm2 restart http-server && \
+            pm2 restart ws-server
+          "
