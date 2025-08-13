@@ -11,7 +11,7 @@ jobs:
       - name: Decode SSH key
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_VM_CICD}}" | base64 -d > ~/.ssh/id_rsa
+          echo "${{ secrets.SSH_VM_CICD }}" | base64 -d > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H 52.71.184.107 >> ~/.ssh/known_hosts
 
@@ -20,5 +20,10 @@ jobs:
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@52.71.184.107 "
             cd vm_hosting_cicd && \
             git pull origin main && \
+            npm install -g pnpm && \
+            pnpm install && \
             pnpm run build && \
+            pm2 restart fe-server && \
+            pm2 restart be-server && \
+            pm2 restart ws-server
           "
